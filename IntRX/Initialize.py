@@ -20,7 +20,7 @@ GenSettings = (vars(parser.parse_args())["GenSettings"])
 
 '''FORMAT ---->   ("Option", "Default", "This is a description"), '''
 defaultSettings = [
-    ("CASTERLABS TOKEN", "", '''Run CTRL+SHIFT+I in Casterlabs, click the Network tab, then paste CAFFEINATED.store.get("token"); to get the token. Do NOT include quotations!'''),
+    ("CASTERLABS TOKEN", "", '''Run CTRL+SHIFT+I in Casterlabs, click the Console tab, then paste CAFFEINATED.store.get("token"); to get the token. Do NOT include quotations!'''),
     ("CLIENT ID", "LmHG2ux992BxqQ7w9RJrfhkW", '''This should only change if you are specifically instructed to do so.'''),
     ("", "", ""),
     ("ANNOUNCE GAME", "Yes", "Announce in chat when you begin playing a game that the bot supports. (Yes/No)"),
