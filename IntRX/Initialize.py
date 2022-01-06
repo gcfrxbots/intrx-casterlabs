@@ -79,6 +79,7 @@ def formatInteractxlsx():
             lightformat = workbook.add_format({'center_across': True, 'font_color': 'black', 'bg_color': '#DCDCDC', 'border': True})
             evenlighterformat =  workbook.add_format({'center_across': True, 'font_color': 'black', 'bg_color': '#f0f0f0', 'border': True})
             redformat = workbook.add_format({'font_color': 'black', 'bg_color': '#ffdede', 'border': True})
+            greenformat = workbook.add_format({'font_color': 'black', 'bg_color': '#e6ffd4', 'border': True})
 
             worksheet = workbook.add_worksheet("Global")  # FORMAT GLOBAL
             worksheet.set_column(0, 0, 30)
@@ -86,14 +87,17 @@ def formatInteractxlsx():
             worksheet.set_column(2, 2, 10)
             worksheet.set_column(3, 3, 45)
             worksheet.set_column(4, 4, 70)
+            worksheet.set_column(5, 5, 20)
             worksheet.write(0, 0, "Command", format)
             worksheet.write(0, 1, "Cooldown", format)
             worksheet.write(0, 2, "Disable", format)
             worksheet.write(0, 3, "Active Window", format)
             worksheet.write(0, 4, "What to Run", format)
+            worksheet.write(0, 5, "Donation Cost", format)
             worksheet.set_column('B:B', 10, lightformat)
             worksheet.set_column('C:C', 10, redformat)
-            worksheet.set_column('D:D', 45, evenlighterformat)
+            worksheet.set_column('D:D', 30, evenlighterformat)
+            worksheet.set_column('F:F', 20, greenformat)
 
             for item in listGames:  # FORMAT GAMES
                 worksheet = workbook.add_worksheet(item)
@@ -101,12 +105,15 @@ def formatInteractxlsx():
                 worksheet.set_column(1, 1, 10)
                 worksheet.set_column(2, 2, 10)
                 worksheet.set_column(3, 3, 130)
+                worksheet.set_column(4, 4, 20)
                 worksheet.write(0, 0, "Command", format)
                 worksheet.write(0, 1, "Cooldown", format)
                 worksheet.write(0, 2, "Disable", format)
                 worksheet.write(0, 3, "Command To Execute", format)
+                worksheet.write(0, 4, "Donation Cost", format)
                 worksheet.set_column('B:B', 10, lightformat)  # END FORMATTING
                 worksheet.set_column('C:C', 10, redformat)  # END FORMATTING
+                worksheet.set_column('E:E', 30, greenformat)
             # Create Global Worksheet
 
         print("Config.xlsx has been updated successfully.")

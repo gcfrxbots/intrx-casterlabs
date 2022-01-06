@@ -53,6 +53,7 @@ class chat:
         self.ws = None
         self.token = settings["CASTERLABS TOKEN"]
         self.url = "wss://api.casterlabs.co/v2/koi?client_id=" + settings["CLIENT ID"]
+        self.donoAmt = 0
 
 
     def login(self):
@@ -82,6 +83,7 @@ class chat:
             time.sleep(0.2)
             result = self.ws.recv()
             resultDict = json.loads(result)
+            #print(resultDict)
 
             if "event" in resultDict.keys():  # Any actual event is under this
                 eventKeys = resultDict["event"].keys()
@@ -96,6 +98,7 @@ class chat:
                     cmdarguments = message.replace(command or "\r" or "\n", "")[1:]
                     getint(cmdarguments)
                     print("(" + formatted_time() + ")>> " + user + ": " + message)
+                    self.donoAmt = 0
 
 
 
@@ -110,6 +113,14 @@ class chat:
 
                     elif command[0] == "!":  # Only run normal commands if COMMAND PHRASE is blank
                         runcommand(command, cmdarguments, user)
+
+                if "donations" in eventKeys:
+                        bitsAmount = round(resultDict["event"]["donations"][0]["amount"])
+                        user = resultDict["event"]["sender"]["displayname"]
+                        message = resultDict["event"]["message"]
+                        print("(" + formatted_time() + ")>> " + user + " donated %s with the message %s" % (bitsAmount, message))
+                        self.donoAmt = bitsAmount
+
 
             if "disclaimer" in resultDict.keys():  # Should just be keepalives?
                 if resultDict["type"] == "KEEP_ALIVE":
@@ -172,7 +183,6 @@ def cmdCooldown(command):
     return 0
 
 
-
 def runcommand(command, cmdArguments, user):
     global currentCommands, activeGame, cooldowns, globalCommands
     if not currentCommands:
@@ -183,6 +193,7 @@ def runcommand(command, cmdArguments, user):
         for i in item:
             if command.lower() == i[0].lower():
                 run = True
+
 
     if not run:
         chatConnection.sendToChat("Invalid command")
@@ -210,10 +221,15 @@ def runcommand(command, cmdArguments, user):
                 return
 
         for item in globalCommands:  # Test if command run is a global command
+            print(item)
+            donoreq = item[4]
             if command.lower() == item[0].lower():  # Command detected, run the file
+                if donoreq:
+                    if not chatConnection.donoAmt > donoreq:
+                        chatConnection.sendToChat("This command can only be run with a donation of at least: " + str(donoreq))
+                        return
 
                 if item[2][0] == "$":  # Process built-in global script
-
                     if isValidInt(cmdArguments):  # Process MAX ARG setting
                         if int(cmdArguments) >= settings["MAX ARG"]:
                             chatConnection.sendToChat("That value is too high, please try again with a lower number.")

@@ -30,6 +30,7 @@ def importGlobal():
             disable = sheet.cell_value(item, 2)
             activeWindow = sheet.cell_value(item, 3)
             whatToRun = sheet.cell_value(item, 4)
+            donocost = sheet.cell_value(item, 5)
 
             if not cooldown:
                 cooldown = 0.0
@@ -41,7 +42,7 @@ def importGlobal():
 
                     if whatToRun[0] == "$":
                         if checkGlobalBuiltInScripts(chatcmd, whatToRun):
-                            globalCommands.append((chatcmd, cooldown, whatToRun, activeWindow))
+                            globalCommands.append((chatcmd, cooldown, whatToRun, activeWindow, donocost))
                     else:
                         if "." not in whatToRun:  # Append .exe onto the end if it isnt there
                             whatToRun += ".exe"
@@ -159,7 +160,7 @@ def processBuiltInGlobal(fullInteractCmd, cmdArguments, user):
         if cmd == "CHAT":
             print("Sending %s to chat." % args)
             print(args)
-            sendMessage(args)
+            #sendMessage(args)
     return True
 
 
@@ -176,6 +177,7 @@ def importInteraction(activeGame):
             cooldown = sheet.cell_value(item, 1)
             disable = sheet.cell_value(item, 2)
             gamecmd = sheet.cell_value(item, 3)
+            donocost = sheet.cell_value(item, 4)
 
             if not cooldown:
                 cooldown = 0.0
@@ -184,7 +186,7 @@ def importInteraction(activeGame):
                 if chatcmd:  # Prevents errors if there's no chat command specified
                     if not chatcmd[0] == "!":
                         chatcmd = "!" + chatcmd
-                    interactCommands.append((chatcmd, cooldown, gamecmd))
+                    interactCommands.append((chatcmd, cooldown, gamecmd, donocost))
                 else:  # No cmd specified
                     print("An entry in your InteractConfig " + activeGame + " page doesn't have a Command specified, so it wasn't loaded.")
     print(">> Loaded " + str(len(interactCommands)) + " commands for " + activeGame)
