@@ -91,6 +91,13 @@ class chat:
                 if "is_live" in eventKeys:  # Got message with casterlabs streamer info, connection is live
                     print("Connected to Casterlabs successfully!")
 
+                if "donations" in eventKeys:
+                        bitsAmount = round(resultDict["event"]["donations"][0]["amount"])
+                        user = resultDict["event"]["sender"]["displayname"]
+                        message = resultDict["event"]["message"]
+                        print("(" + formatted_time() + ")>> " + user + " donated %s with the message %s" % (bitsAmount, message))
+                        self.donoAmt = bitsAmount
+
                 if "message" in eventKeys:  # Got chat message, display it then process commands
                     message = resultDict["event"]["message"]
                     user = resultDict["event"]["sender"]["displayname"]
@@ -98,7 +105,7 @@ class chat:
                     cmdarguments = message.replace(command or "\r" or "\n", "")[1:]
                     getint(cmdarguments)
                     print("(" + formatted_time() + ")>> " + user + ": " + message)
-                    self.donoAmt = 0
+
 
 
 
@@ -114,12 +121,7 @@ class chat:
                     elif command[0] == "!":  # Only run normal commands if COMMAND PHRASE is blank
                         runcommand(command, cmdarguments, user)
 
-                if "donations" in eventKeys:
-                        bitsAmount = round(resultDict["event"]["donations"][0]["amount"])
-                        user = resultDict["event"]["sender"]["displayname"]
-                        message = resultDict["event"]["message"]
-                        print("(" + formatted_time() + ")>> " + user + " donated %s with the message %s" % (bitsAmount, message))
-                        self.donoAmt = bitsAmount
+                    self.donoAmt = 0
 
 
             if "disclaimer" in resultDict.keys():  # Should just be keepalives?
@@ -223,10 +225,11 @@ def runcommand(command, cmdArguments, user):
         for item in globalCommands:  # Test if command run is a global command
             print(item)
             donoreq = item[4]
+            print(donoreq)
             if command.lower() == item[0].lower():  # Command detected, run the file
                 if donoreq:
                     if not chatConnection.donoAmt > donoreq:
-                        chatConnection.sendToChat("This command can only be run with a donation of at least: " + str(donoreq))
+                        chatConnection.sendToChat("This command can only be run with a donation of at least $" + str(donoreq))
                         return
 
                 if item[2][0] == "$":  # Process built-in global script
