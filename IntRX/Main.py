@@ -118,8 +118,9 @@ class chat:
                                 print("Running command from another bot: " + toRun)
                                 runcommand("!" + toRun, cmdarguments, user)
 
-                    elif command[0] == "!":  # Only run normal commands if COMMAND PHRASE is blank
-                        runcommand(command, cmdarguments, user)
+                    elif command: # Changed from MAIN Fix to prevent crash when donation is sent without message
+                        if command[0] == "!":  # Only run normal commands if COMMAND PHRASE is blank
+                            runcommand(command, cmdarguments, user)
 
                     self.donoAmt = 0
 
