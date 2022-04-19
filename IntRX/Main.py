@@ -70,7 +70,7 @@ class chat:
     def sendToChat(self, message):
         request = {
           "type": "CHAT",
-          "message": "IntRX: " + message,
+          "message": message,
           "chatter": "CLIENT"}
         self.sendRequest(request)
 
@@ -229,7 +229,7 @@ def runcommand(command, cmdArguments, user):
             if command.lower() == item[0].lower():  # Command detected, run the file
                 if donoreq:
                     if not chatConnection.donoAmt > donoreq:
-                        chatConnection.sendToChat("This command can only be run with a donation of at least $" + str(donoreq))
+                        chatConnection.sendToChat("This command requires at least " + str(int(int(donoreq)/3)) + " gold!")
                         return
 
                 if item[2][0] == "$":  # Process built-in global script
